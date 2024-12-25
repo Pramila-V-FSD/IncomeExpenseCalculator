@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Income Expense Calculator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Righteous&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Rowdies:wght@300;400;700&family=Saira:ital,wght@0,100..900;1,100..900&family=Volkhov:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <style>
+        /* Reset Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: lightgray;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .app-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #333;
+            font-family: "Volkhov", serif;
+
+        }
+
+        /* Summary Section */
+        .summary {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center; /* Center the content horizontally */
+            align-items: center; /* Align items vertically in the center */
+            padding: 20px;
+            background-color: #fafafa;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .summary .total {
+            display: flex;
+            gap: 20px; /* Add some space between the totals */
+        }
+
+        .summary h2 {
+            font-size: 1.2rem;
+            color: #333;
+            
+            margin: 0;
+            
+            
+        }
+
+        .summary .total h2 {
+            font-weight: 500;
+            
+        }
+
+        /* Filter Section */
+        .filter {
+            margin-bottom: 20px;
+        }
+
+        .filter h3 {
+            font-size: 1.125rem;
+            margin-bottom: 10px;
+            font-family: "Saira";
+        }
+
+        .radio-buttons label {
+            margin-right: 20px;
+            font-size: 1rem;
+        }
+
+        /* Form Section */
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .form-section h3 {
+            font-size: 1.125rem;
+            margin-bottom: 10px;
+            font-family: "Saira";
+        }
+
+        .form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .form input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .radio-group label {
+            margin-right: 20px;
+            font-size: 1rem;
+        }
+
+        button {
+            padding: 10px;
+            border: none;
+            background-color: #059fc5;
+            color: #fff;
+            font-size: 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        button:focus {
+            outline: none;
+        }
+
+        /* Entry List Section */
+        .entry-list h3 {
+            font-size: 1.125rem;
+            margin-bottom: 10px;
+            font-family: "Saira";
+        }
+
+        .entry-list ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .entry-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            background-color: #f9f9f9;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+            position: relative; /* Ensure positioning for buttons */
+        }
+
+        .entry-list li.income {
+            background-color: hsl(139, 63%, 85%);
+        }
+
+        .entry-list li.expense {
+            background-color: #f8d7da;
+        }
+
+        /* Entry Info */
+        .entry-list li .entry-info {
+            flex: 1; /* Ensure that the description and amount take available space */
+        }
+
+        .entry-list li .entry-info span {
+            font-size: 1rem;
+            color: #333;
+        }
+
+        /* Button Styles */
+        .entry-list li .entry-buttons {
+            position: absolute; /* Position buttons absolutely within the list item */
+            right: 10px; /* Align to the right side */
+            top: 50%;
+            transform: translateY(-50%); /* Vertically center the buttons */
+            display: flex;
+            gap: 10px; /* Space between buttons */
+        }
+
+        button.editBtn, button.deleteBtn {
+            padding: 5px 10px;
+            font-size: 0.875rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button.editBtn {
+            background-color: #28a745;
+            color: white;
+        }
+
+        button.editBtn:hover {
+            background-color: #218838;
+        }
+
+        button.deleteBtn {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        button.deleteBtn:hover {
+            background-color: #c82333;
+        }
+
+        /* Responsive Layout */
+        @media (max-width: 768px) {
+            .summary {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .form {
+                flex-direction: column;
+            }
+
+            .form input {
+                width: 100%;
+            }
+
+            .form button {
+                width: 100%;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <header>
+            <h1>Income Expense Calculator</h1>
+        </header>
+
+        <section class="summary">
+            <div class="total">
+                <h2>Total Income: $<span id="totalIncome">0.00</span></h2>
+                <h2>Total Expenses: $<span id="totalExpense">0.00</span></h2>
+                <h2>Net Balance: $<span id="netBalance">0.00</span></h2>
+            </div>
+        </section>
+
+        <section class="filter">
+            <h3>Filter Entries</h3>
+            <div class="radio-buttons">
+                <label>
+                    <input type="radio" name="filter" value="all" checked> All
+                </label>
+                <label>
+                    <input type="radio" name="filter" value="income"> Income
+                </label>
+                <label>
+                    <input type="radio" name="filter" value="expense"> Expense
+                </label>
+            </div>
+        </section>
+
+        <section class="form-section">
+            <h3>Add New Entry</h3>
+            <div class="form">
+                <input type="text" id="description" placeholder="Description" required>
+                <input type="number" id="amount" placeholder="Amount" required>
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" name="type" value="income" checked> Income
+                    </label>
+                    <label>
+                        <input type="radio" name="type" value="expense"> Expense
+                    </label>
+                </div>
+                <button id="addBtn">Add Entry</button>
+                <button id="resetBtn">Reset</button>
+            </div>
+        </section>
+
+        <section class="entry-list">
+            <h3>Entries</h3>
+            <ul id="entryList"></ul>
+        </section>
+
+    </div>
+
+    <script>
+        // script.js
+
+        // Get data from localStorage
+        const loadData = () => {
+            const data = JSON.parse(localStorage.getItem('entries')) || [];
+            return data;
+        };
+
+        // Save data to localStorage
+        const saveData = (data) => {
+            localStorage.setItem('entries', JSON.stringify(data));
+        };
+
+        // Calculate totals
+        const updateTotals = (entries) => {
+            let totalIncome = 0;
+            let totalExpense = 0;
+
+            entries.forEach(entry => {
+                if (entry.type === 'income') {
+                    totalIncome += entry.amount;
+                } else if (entry.type === 'expense') {
+                    totalExpense += entry.amount;
+                }
+            });
+
+            const netBalance = totalIncome - totalExpense;
+
+            document.getElementById('totalIncome').textContent = totalIncome.toFixed(2);
+            document.getElementById('totalExpense').textContent = totalExpense.toFixed(2);
+            document.getElementById('netBalance').textContent = netBalance.toFixed(2);
+        };
+
+        // Render entries
+        const renderEntries = (entries, filter) => {
+            const entryList = document.getElementById('entryList');
+            entryList.innerHTML = '';
+
+            entries.filter(entry => filter === 'all' || entry.type === filter).forEach(entry => {
+                const li = document.createElement('li');
+                li.classList.add(entry.type);
+
+                const entryInfo = document.createElement('div');
+                entryInfo.classList.add('entry-info');
+                entryInfo.innerHTML = `
+                    <span>${entry.description}: $${entry.amount.toFixed(2)}</span>
+                `;
+
+                const entryButtons = document.createElement('div');
+                entryButtons.classList.add('entry-buttons');
+                entryButtons.innerHTML = `
+                    <button class="editBtn" onclick="editEntry(${entry.id})">Edit</button>
+                    <button class="deleteBtn" onclick="deleteEntry(${entry.id})">Delete</button>
+                `;
+
+                // Append entry info and buttons to the list item
+                li.appendChild(entryInfo);
+                li.appendChild(entryButtons);
+
+                // Append the list item to the entry list
+                entryList.appendChild(li);
+            });
+
+            updateTotals(entries);
+        };
+
+        // Add entry
+        const addEntry = () => {
+            const description = document.getElementById('description').value;
+            const amount = parseFloat(document.getElementById('amount').value);
+            const type = document.querySelector('input[name="type"]:checked').value;
+
+            if (!description || isNaN(amount) || amount <= 0) {
+                alert("Please enter a valid description and amount.");
+                return;
+            }
+
+            const entries = loadData();
+            const newEntry = {
+                id: Date.now(),
+                description,
+                amount,
+                type,
+            };
+
+            entries.push(newEntry);
+            saveData(entries);
+            renderEntries(entries, document.querySelector('input[name="filter"]:checked').value);
+
+            // Reset form fields
+            document.getElementById('description').value = '';
+            document.getElementById('amount').value = '';
+        };
+
+        // Edit entry
+        const editEntry = (id) => {
+            const entries = loadData();
+            const entry = entries.find(entry => entry.id === id);
+            if (entry) {
+                document.getElementById('description').value = entry.description;
+                document.getElementById('amount').value = entry.amount;
+
+                const typeRadio = document.querySelector(`input[name="type"][value="${entry.type}"]`);
+                if (typeRadio) typeRadio.checked = true;
+
+                deleteEntry(id);
+            }
+        };
+
+        // Delete entry
+        const deleteEntry = (id) => {
+            const entries = loadData();
+            const updatedEntries = entries.filter(entry => entry.id !== id);
+            saveData(updatedEntries);
+            renderEntries(updatedEntries, document.querySelector('input[name="filter"]:checked').value);
+        };
+
+        // Reset form inputs
+        const resetForm = () => {
+            document.getElementById('description').value = '';
+            document.getElementById('amount').value = '';
+        };
+
+        // Filter entries
+        document.querySelectorAll('input[name="filter"]').forEach(input => {
+            input.addEventListener('change', () => {
+                const filter = document.querySelector('input[name="filter"]:checked').value;
+                renderEntries(loadData(), filter);
+            });
+        });
+
+        // Event listeners
+        document.getElementById('addBtn').addEventListener('click', addEntry);
+        document.getElementById('resetBtn').addEventListener('click', resetForm);
+
+        // Initialize app
+        const init = () => {
+            renderEntries(loadData(), 'all');
+        };
+
+        init();
+
+    </script>
+</body>
+</html>
